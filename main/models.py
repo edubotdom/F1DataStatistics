@@ -15,6 +15,7 @@ class Piloto(models.Model):
     carreras = models.IntegerField(verbose_name='Número de carreras disputadas')
     puntos = models.DecimalField(decimal_places=10,max_digits=15,verbose_name='Número de puntos obtenidos durante su carrera deportiva')
     retiros = models.IntegerField(verbose_name='Número de retiros durante su carrera deportiva')
+    anyos_competidos = models.TextField(verbose_name='Años competidos en la categoría')
 
     def __str__(self):
         return self.nombre
@@ -28,7 +29,8 @@ class Escuderia(models.Model):
     carreras = models.IntegerField(verbose_name='Número de carreras disputadas')
     campeonatos = models.IntegerField(verbose_name='Número de campeonatos del mundo de constructores ganados')
     puntos = models.DecimalField(decimal_places=10,max_digits=15,verbose_name='Número de puntos obtenidos durante su carrera deportiva')
-    #pilotos = models.ManyToManyField(Piloto)
+    anyos_competidos = models.TextField(verbose_name='Años competidos en la categoría')
+    pilotos = models.ManyToManyField("Piloto") 
     
     def __str__(self):
         return self.nombre
