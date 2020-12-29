@@ -29,5 +29,7 @@ urlpatterns = [
     path ('pilotos/', views.lista_pilotos),
     path ('constructores/', views.lista_constructores),
     path('busqueda_nacionalidad/', views.buscar_por_nacionalidad),
-    path('busqueda_anyo/', views.buscar_por_anyo)
+    path('busqueda_anyo/', views.buscar_por_anyo),
+    path('busqueda_nombre/', views.buscar_por_nombre),
+    path('top_pilotos_escuderias/', views.listar_mejores),
 ]

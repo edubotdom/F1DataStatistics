@@ -6,6 +6,7 @@ import urllib.request
 import lxml
 from datetime import datetime
 import re, os, shutil
+from whoosh.query import Every
 from whoosh.index import create_in,open_dir
 from whoosh.fields import Schema, TEXT, DATETIME, KEYWORD, NUMERIC
 from whoosh.qparser import QueryParser, MultifieldParser, OrGroup
@@ -13,7 +14,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from main.forms import BusquedaPorNacionalidadForm, BusquedaPorAnyoForm
+from main.forms import BusquedaPorNacionalidadForm, BusquedaPorAnyoForm,\
+    BusquedaPorNombreForm, BusquedaPorMasDestacadosForm
 
 def extraer_pilotos():
     #definimos el esquema de la información
@@ -96,9 +98,7 @@ def extraer_pilotos():
         
         #Registramos los datos obtenidos en el directorio de Whoosh
         driver_writer.add_document(nombre=str(nombre),nacionalidad=str(nacionalidad),fechaNacimiento=fechaNacimiento,victorias=str(victorias),podios=str(podios),poles=str(poles),campeonatos=str(campeonatos),temporadas=str(temporadas),carreras=str(carreras),puntos=str(puntos),retiros=str(retiros), anyos_competidos=str(anyos_competidos))
-        
-               
-        print(nombre)   
+  
           
         
     driver_writer.commit()    
@@ -207,8 +207,7 @@ def extraer_escuderias():
         
         #Registramos los datos obtenidos en el directorio de Whoosh
         constructors_writer.add_document(nombre=str(nombre),nacionalidad=str(nacionalidad),victorias=str(victorias),poles=str(poles),temporadas=str(temporadas),carreras=str(carreras),campeonatos=str(campeonatos),puntos=str(puntos), anyos_competidos=str(anyos_competidos), pilotos=str(lista_textual_pilotos))
-         
-        print(nombre)
+
 
     constructors_writer.commit()
 
@@ -263,6 +262,101 @@ def lista_constructores(request):
     escuderias=Escuderia.objects.all()
     return render(request,'escuderias.html', {'escuderias':escuderias})
 
+def listar_mejores(request):
+    formulario = BusquedaPorMasDestacadosForm()
+    pilotos = None
+    escuderias = None
+    
+    if request.method=='POST':
+        formulario = BusquedaPorMasDestacadosForm(request.POST)      
+        if formulario.is_valid():
+            opcion=formulario.cleaned_data['opcion']
+            
+            if opcion=="Campeonatos":        
+                ix=open_dir("DriversIndex")      
+                with ix.searcher() as searcher:
+                    query = Every()
+                    pilotos_seleccionados = searcher.search(query, limit=10, sortedby="campeonatos", reverse=True)
+                    
+                    pilotos=[]
+                    for piloto_seleccionado in pilotos_seleccionados:
+                        piloto_obj = Piloto.objects.get(nombre=piloto_seleccionado['nombre'])
+                        pilotos.append(piloto_obj)                
+                 
+                ix=open_dir("ConstructorsIndex")      
+                with ix.searcher() as searcher:
+                    query = Every()
+                    constructores_seleccionados = searcher.search(query, limit=10, sortedby="campeonatos", reverse=True)
+                     
+                    escuderias=[]
+                    for constructor_seleccionado in constructores_seleccionados:
+                        escuderia_obj = Escuderia.objects.get(nombre=constructor_seleccionado['nombre'])
+                        escuderias.append(escuderia_obj) 
+                
+            elif opcion=="Victorias":
+                ix=open_dir("DriversIndex")      
+                with ix.searcher() as searcher:
+                    query = Every()
+                    pilotos_seleccionados = searcher.search(query, limit=10, sortedby="victorias", reverse=True)
+                    
+                    pilotos=[]
+                    for piloto_seleccionado in pilotos_seleccionados:
+                        piloto_obj = Piloto.objects.get(nombre=piloto_seleccionado['nombre'])
+                        pilotos.append(piloto_obj)                
+                 
+                ix=open_dir("ConstructorsIndex")      
+                with ix.searcher() as searcher:
+                    query = Every()
+                    constructores_seleccionados = searcher.search(query, limit=10, sortedby="victorias", reverse=True)
+                     
+                    escuderias=[]
+                    for constructor_seleccionado in constructores_seleccionados:
+                        escuderia_obj = Escuderia.objects.get(nombre=constructor_seleccionado['nombre'])
+                        escuderias.append(escuderia_obj) 
+            elif opcion=="Poles":
+                ix=open_dir("DriversIndex")      
+                with ix.searcher() as searcher:
+                    query = Every()
+                    pilotos_seleccionados = searcher.search(query, limit=10, sortedby="poles", reverse=True)
+                    
+                    pilotos=[]
+                    for piloto_seleccionado in pilotos_seleccionados:
+                        piloto_obj = Piloto.objects.get(nombre=piloto_seleccionado['nombre'])
+                        pilotos.append(piloto_obj)                
+                 
+                ix=open_dir("ConstructorsIndex")      
+                with ix.searcher() as searcher:
+                    query = Every()
+                    constructores_seleccionados = searcher.search(query, limit=10, sortedby="poles", reverse=True)
+                     
+                    escuderias=[]
+                    for constructor_seleccionado in constructores_seleccionados:
+                        escuderia_obj = Escuderia.objects.get(nombre=constructor_seleccionado['nombre'])
+                        escuderias.append(escuderia_obj) 
+            elif opcion=="Carreras":
+                ix=open_dir("DriversIndex")      
+                with ix.searcher() as searcher:
+                    query = Every()
+                    pilotos_seleccionados = searcher.search(query, limit=10, sortedby="carreras", reverse=True)
+                    
+                    pilotos=[]
+                    for piloto_seleccionado in pilotos_seleccionados:
+                        piloto_obj = Piloto.objects.get(nombre=piloto_seleccionado['nombre'])
+                        pilotos.append(piloto_obj)                
+                 
+                ix=open_dir("ConstructorsIndex")      
+                with ix.searcher() as searcher:
+                    query = Every()
+                    constructores_seleccionados = searcher.search(query, limit=10, sortedby="carreras", reverse=True)
+                     
+                    escuderias=[]
+                    for constructor_seleccionado in constructores_seleccionados:
+                        escuderia_obj = Escuderia.objects.get(nombre=constructor_seleccionado['nombre'])
+                        escuderias.append(escuderia_obj)             
+           
+    return render(request, 'top_pilotos_escuderias.html', {'formulario':formulario, 'pilotos':pilotos, 'escuderias':escuderias})
+
+
 def buscar_por_nacionalidad(request):
     formulario = BusquedaPorNacionalidadForm()
     pilotos = None
@@ -292,9 +386,7 @@ def buscar_por_nacionalidad(request):
                 for constructor_nacionalidad in constructores_nacionalidad:
                     escuderia_obj = Escuderia.objects.get(nombre=constructor_nacionalidad['nombre'])
                     escuderias.append(escuderia_obj) 
-    
-    print(pilotos)
-    print(escuderias)            
+              
     return render(request, 'pilotos_escuderias_por_nacionalidad.html', {'formulario':formulario, 'pilotos':pilotos, 'escuderias':escuderias})
 
 def buscar_por_anyo(request):
@@ -326,10 +418,40 @@ def buscar_por_anyo(request):
                 for constructor_anyo in constructores_anyo:
                     escuderia_obj = Escuderia.objects.get(nombre=constructor_anyo['nombre'])
                     escuderias.append(escuderia_obj) 
-    
-    print(pilotos)
-    print(escuderias)            
+                
     return render(request, 'pilotos_escuderias_por_anyo.html', {'formulario':formulario, 'pilotos':pilotos, 'escuderias':escuderias})
+
+def buscar_por_nombre(request):
+    formulario = BusquedaPorNombreForm()
+    pilotos = None
+    escuderias = None
+    
+    if request.method=='POST':
+        formulario = BusquedaPorNombreForm(request.POST)      
+        if formulario.is_valid():
+            nombre=formulario.cleaned_data['nombre']
+            
+            ix=open_dir("DriversIndex")      
+            with ix.searcher() as searcher:
+                query = QueryParser("nombre", ix.schema).parse(nombre)
+                pilotos_nombre = searcher.search(query, limit=100)
+                
+                pilotos=[]
+                for piloto_nombre in pilotos_nombre:
+                    piloto_obj = Piloto.objects.get(nombre=piloto_nombre['nombre'])
+                    pilotos.append(piloto_obj)                
+             
+            ix=open_dir("ConstructorsIndex")      
+            with ix.searcher() as searcher:
+                query = QueryParser("nombre", ix.schema).parse(nombre)
+                constructores_nombre= searcher.search(query, limit=30)  
+                
+                escuderias=[]
+                for constructor_nombre in constructores_nombre:
+                    escuderia_obj = Escuderia.objects.get(nombre=constructor_nombre['nombre'])
+                    escuderias.append(escuderia_obj) 
+               
+    return render(request, 'pilotos_escuderias_por_nombre.html', {'formulario':formulario, 'pilotos':pilotos, 'escuderias':escuderias})
 
 
 def usuario_nuevo(request):
