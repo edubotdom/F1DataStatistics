@@ -1,0 +1,29 @@
+
+
+{% extends 'base.html' %}
+
+{% block encabezado %}
+<h1> Pilotos </h1>
+{% endblock %}
+
+  {% block contenido %}
+			{% for row in pilotos %}
+				<ul>
+			    <dt><li><b>{{row.nombre}}</b> (Nombre de la nacionalidad: {{row.nacionalidad}})</li></dt>
+			    <dd><b>Fecha de nacimiento: </b>{{row.fechaNacimiento}}
+					<b>Victorias: </b>{{row.victorias}}
+					<b>Podios: </b>{{row.podios}}
+					<b>Poles: </b>{{row.poles}}
+					<b>Campeonatos del mundo de pilotos ganados: </b>{{row.campeonatos}}
+					<b>Temporadas disputadas: </b>{{row.temporadas}}
+					<b>Carreras disputadas: </b>{{row.carreras}}
+					<b>Puntos obtenidos durante su carrera deportiva: </b>{{row.puntos}}
+					<b>Retiros durante su carrera deportiva: </b>{{row.retiros}} </dd>   
+				</ul>	
+				<dd> <b>Anyos competidos en el mundial: </b>
+			    {% for a in row.anyos_competidos.all %}
+			    	{{a.anyo}} 
+			    {% endfor %}
+					<br><br>
+			{% endfor %}
+  {% endblock %}

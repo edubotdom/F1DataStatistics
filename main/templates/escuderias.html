@@ -1,0 +1,33 @@
+
+
+{% extends 'base.html' %}
+
+{% block encabezado %}
+<h1> Pilotos </h1>
+{% endblock %}
+
+  {% block contenido %}
+			{% for row in escuderias %}
+				<ul>
+			    <dt><li><b>{{row.nombre}}</b> (Nombre de la nacionalidad: {{row.nacionalidad}})</li></dt>
+			    <dd><b>Victorias: </b>{{row.victorias}} 
+					<b>Poles: </b>{{row.poles}}
+					<b>Campeonatos del mundo de constructores ganados: </b>{{row.campeonatos}}
+					<b>Temporadas disputadas: </b>{{row.temporadas}}
+					<b>Carreras disputadas: </b>{{row.carreras}}
+					<b>Puntos obtenidos durante su historia: </b>{{row.puntos}}
+				<br>
+				<dd> <b>Pilotos que han pilotado para ellos: </b>
+			    {% for pil in row.pilotos.all %}
+			    	{{pil.nombre}} 
+			    {% endfor %}
+			    </dd>
+			   	<dd> <b>Temporadas en las que han participado: </b>
+			    {% for a in row.anyos_competidos.all %}
+			    	{{a.anyo}} 
+			    {% endfor %}
+			    </dd>
+			    </ul>
+			<br><br>
+			{% endfor %}
+  {% endblock %}

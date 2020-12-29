@@ -20,6 +20,14 @@ from django.contrib import admin
 from django.urls import path
 
 urlpatterns = [
+    path('', views.inicio),
     path('admin/', admin.site.urls), 
-    path('cargar_base_datos/', views.cargar_bd)
+    path('cargar_base_datos/', views.cargar_bd),
+    path('ingresar/', views.ingresar),
+    path('nuevo_usuario/', views.usuario_nuevo),
+    path ('cerrar/', views.cerrar),
+    path ('pilotos/', views.lista_pilotos),
+    path ('constructores/', views.lista_constructores),
+    path('busqueda_nacionalidad/', views.buscar_por_nacionalidad),
+    path('busqueda_anyo/', views.buscar_por_anyo)
 ]
