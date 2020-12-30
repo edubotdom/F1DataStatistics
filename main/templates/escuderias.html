@@ -3,31 +3,34 @@
 {% extends 'base.html' %}
 
 {% block encabezado %}
-<h1> Pilotos </h1>
 {% endblock %}
 
   {% block contenido %}
+  <h1 class="display-4" style="text-align:center"> CONSTRUCTORES </h1>
 			{% for row in escuderias %}
-				<ul>
-			    <dt><li><b>{{row.nombre}}</b> (Nombre de la nacionalidad: {{row.nacionalidad}})</li></dt>
-			    <dd><b>Victorias: </b>{{row.victorias}} 
-					<b>Poles: </b>{{row.poles}}
-					<b>Campeonatos del mundo de constructores ganados: </b>{{row.campeonatos}}
-					<b>Temporadas disputadas: </b>{{row.temporadas}}
-					<b>Carreras disputadas: </b>{{row.carreras}}
-					<b>Puntos obtenidos durante su historia: </b>{{row.puntos}}
-				<br>
-				<dd> <b>Pilotos que han pilotado para ellos: </b>
-			    {% for pil in row.pilotos.all %}
-			    	{{pil.nombre}} 
-			    {% endfor %}
-			    </dd>
-			   	<dd> <b>Temporadas en las que han participado: </b>
-			    {% for a in row.anyos_competidos.all %}
-			    	{{a.anyo}} 
-			    {% endfor %}
-			    </dd>
-			    </ul>
+			<div class="card border-dark mb-3">
+  				<div class="card-header">
+    				<b>{{row.nombre}}</b> (Nacionalidad: {{row.nacionalidad}})
+  				</div>
+	  			<div class="card-body">
+				    <p class="card-text"><b>Victorias: </b>{{row.victorias}}</p>
+				    <p class="card-text"><b>Campeonatos del mundo de constructores ganados: </b>{{row.campeonatos}}</p>
+				    <p class="card-text"><b>Poles: </b>{{row.poles}}</p>
+				    <p class="card-text"><b>Temporadas disputadas: </b>{{row.temporadas}}</p>
+				    <p class="card-text"><b>Carreras disputadas: </b>{{row.carreras}}</p>
+				    <p class="card-text"><b>Puntos obtenidos durante su historia: </b>{{row.puntos}}</p>
+				    <p class="card-text"><b>Temporadas en las que han participado: </b> 
+				    	{% for a in row.anyos_competidos.all %}
+			    			{{a.anyo}} 
+			    		{% endfor %}
+				    </p>
+				    <p class="card-text"><b>Pilotos que han pilotado para ellos: </b>
+			    	{% for pil in row.pilotos.all %}
+			    		{{pil.nombre}} 
+			    	{% endfor %}
+				    </p>
+	  			</div>
+			</div>
 			<br><br>
 			{% endfor %}
   {% endblock %}

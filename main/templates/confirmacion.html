@@ -3,13 +3,22 @@
 {% extends 'base.html' %}
 
 {% block encabezado %}
-<h1> Carga de la Base de datos. Confirmacion </h1>
 {% endblock %}
 
   {% block contenido %}
-    <h3>AVISO: Este proceso es lento, borra la base de datos actual y requiere conexion a internet</h3>
-    <form id='formulario' method='post' action=''>{% csrf_token %}
-		<input type="submit" name="Aceptar" value="Aceptar">
-		<input type="submit" name="Cancelar" value="Cancelar">
+    <h1 class="display-4" style="text-align:center"> CONFIRMACION PARA CARGAR LA BASE DE DATOS</h1>
+	<br><br><br> 
+	<h2 class="display-6" style="text-align:center"> PROCESO LENTO, BORRA LA BASE DE DATOS ACTUAL Y LA RECARGA. REQUIERE CONEXION A LA RED</h2>
+	<h3 class="display-6" style="text-align:center"> PULSE ACEPTAR SI DESEA CONTINUAR</h3>
+
+    <br><br>
+    <form id='formulario' method='post' action='' style="text-align:center">{% csrf_token %}
+    	<div class="col-12">
+    		<button type="submit" name="Aceptar" value="Aceptar" class="btn btn-primary">Aceptar</button>
+  		</div>
+  		<br>
+  		<div class="col-12">
+    		<button type="submit" name="Cancelar" value="Cancelar" class="btn btn-primary">Cancelar</button>
+  		</div>
 	</form>
   {% endblock %}

@@ -2,28 +2,55 @@
 <html lang='es'>
 <head>
   <meta charset='utf-8'>
-  <style>
-   {% block style_css %}{% endblock %}
-  </style>
+  <title class="display-4">F1 DATA STATISTICS</title>
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="shortcut icon" type="image/png" href="{% static 'images/1280px-F1.svg.png' %}"/>
+  
 </head>
 <body>
   <header> 
   	{% block encabezado %}{% endblock %}
-
- 			<dd><a href='/'>Inicio</a></dd>
-			<dd><a href='/cargar_base_datos'>Cargar información (Acceso restringido)</a></dd>
-			<dd><a href='/ingresar'>Acceda a su usuario</a></dd>
-			<dd><a href='/nuevo_usuario'>Cree un nuevo usuario</a></dd>
-			<dd><a href='/cerrar'>Cerrar sesión</a></dd>
-			<dd><a href='/constructores'>Lista de constructores</a></dd>
-			<dd><a href='/pilotos'>Lista de pilotos</a></dd>
-			<dd><a href='/busqueda_nacionalidad'>Listar equipos y pilotos por nacionalidad</a></dd>
-			<dd><a href='/busqueda_anyo'>Listar equipos y pilotos de una temporada concreta</a></dd>
-			<dd><a href='/busqueda_nombre'>Buscar equipos y pilotos por su nombre</a></dd>
-			<dd><a href='/top_pilotos_escuderias'>Mostrar mejores pilotos y escuderías por parámetro</a></dd>
-			
-	<hr>
   </header>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+ 			<div class="container-fluid">
+ 			 <a class="navbar-brand" href="/">F1 DATA STATISTICS</a>
+ 			 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      			<span class="navbar-toggler-icon"></span>
+    		 </button>
+ 			 <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+	 				<li class="nav-item dropdown">
+          				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           				 Acceso privado y registro
+          				</a>
+          				<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+				            <li><a class="dropdown-item" href='/ingresar'>Acceso</a></li>
+				            <li><a class="dropdown-item" href='/nuevo_usuario'>Nuevo usuario</a></li>
+				            <li><a class="dropdown-item" href='/cerrar'>Cerrar sesión</a></li>
+				            <li><hr class="dropdown-divider"></li>
+				            <li><a class="dropdown-item" href='/cargar_base_datos'>Cargar BBDD (Restringido)</a></li>
+          				</ul>
+        			</li>
+					<li><a class="nav-link active" aria-current="page" href='/constructores'>Constructores</a></li>
+					<li><a class="nav-link active" aria-current="page" href='/pilotos'>Pilotos</a></li>
+					<li><a class="nav-link active" aria-current="page" href='/busqueda_nacionalidad'>Buscar por nacionalidad</a></li>
+					<li><a class="nav-link active" aria-current="page" href='/busqueda_anyo'>Buscar por temporada</a></li>
+					<li><a class="nav-link active" aria-current="page" href='/busqueda_nombre'>Buscar por nombre</a></li>
+					<li><a class="nav-link active" aria-current="page" href='/top_pilotos_escuderias'>Mejores pilotos y constructores</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+  
+  	<hr>
   <section>
     {% block contenido %}{% endblock %}
   </section>

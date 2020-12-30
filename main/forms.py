@@ -14,4 +14,4 @@ class BusquedaPorNombreForm(forms.Form):
     nombre = forms.CharField(label="Introduzca el nombre del equipo o piloto del que desea obtener información ", required=True)
     
 class BusquedaPorMasDestacadosForm(forms.Form):
-    opcion = forms.ChoiceField(label="Seleccione la categoría para realizar la selección ", choices=[("Campeonatos", "Campeonatos"), ("Victorias", "Victorias"), ("Poles","Poles"), ("Carreras","Carreras")])    
+    opcion = forms.ChoiceField(label="Seleccione la categoría para realizar la selección ", choices=[("Campeonatos", "Campeonatos"), ("Victorias", "Victorias"), ("Poles","Poles"), ("Carreras","Carreras")])

@@ -1,72 +1,73 @@
 {% extends 'base.html' %}
 
 {% block encabezado %}
-<h1> Listado con los 10 mejores pilotos o constructores en la categoria seleccionada</h1>
 {% endblock %}
 
 {% block contenido %}
-
-    	<form id="formulario" method="post" action=''>{% csrf_token %}
+<h1 class="display-4" style="text-align:center">MEJORES 10 PILOTOS O CONSTRUCTORES POR CRITERIO</h1>
+	    <hr>
+    	<form id="formulario" method="post" action='' style="text-align:center">{% csrf_token %}
     		{{formulario}}
-    		<input type='submit' value='Realizar Busqueda'/>
+    	<div class="col-12">
+    		<button type="submit" class="btn btn-primary">Realizar busqueda</button>
+  		</div>
     	</form>
 	    
 	    <hr>
-
 	    {% if pilotos %}
+	    		<h2>Pilotos</h2>
 			{% for row in pilotos %}
-				<ul>
-			    <dt><li><b>{{row.nombre}}</b> (Nombre de la nacionalidad: {{row.nacionalidad}})</li></dt>
-			    <dd><b>Fecha de nacimiento: </b>{{row.fechaNacimiento}}
-					<b>Victorias: </b>{{row.victorias}}
-					<b>Podios: </b>{{row.podios}}
-					<b>Poles: </b>{{row.poles}}
-					<b>Campeonatos del mundo de pilotos ganados: </b>{{row.campeonatos}}
-					<b>Temporadas disputadas: </b>{{row.temporadas}}
-					<b>Carreras disputadas: </b>{{row.carreras}}
-					<b>Puntos obtenidos durante su carrera deportiva: </b>{{row.puntos}}
-					<b>Retiros durante su carrera deportiva: </b>{{row.retiros}} </dd>   
-				</ul>	
-				<dd> <b>Anyos competidos en el mundial: </b>
-			    {% for a in row.anyos_competidos.all %}
-			    	{{a.anyo}} 
-			    {% endfor %}
-					<br><br>
+			<div class="card border-warning mb-3">
+  				<div class="card-header">
+    				<b>{{row.nombre}}</b> (Nacionalidad: {{row.nacionalidad}})
+  				</div>
+	  			<div class="card-body">
+				    <p class="card-text"><b>Fecha de nacimiento: </b>{{row.fechaNacimiento}}</p>
+				    <p class="card-text"><b>Victorias: </b>{{row.victorias}}</p>
+				    <p class="card-text"><b>Podios: </b>{{row.podios}}</p>
+				    <p class="card-text"><b>Campeonatos del mundo de pilotos ganados: </b>{{row.campeonatos}}</p>
+				    <p class="card-text"><b>Poles: </b>{{row.poles}}</p>
+				    <p class="card-text"><b>Temporadas disputadas: </b>{{row.temporadas}}</p>
+				    <p class="card-text"><b>Carreras disputadas: </b>{{row.carreras}}</p>
+				    <p class="card-text"><b>Puntos obtenidos durante su carrera deportiva: </b>{{row.puntos}}</p>
+				    <p class="card-text"><b>Retiros durante su carrera deportiva: </b>{{row.retiros}}</p>
+				    <p class="card-text"><b>Anyos competidos en el mundial: </b> 
+				    	{% for a in row.anyos_competidos.all %}
+			    			{{a.anyo}} 
+			    		{% endfor %}
+				    </p>
+	  			</div>
+			</div>			
 			{% endfor %}
-
-			</dl>
-
 		{% endif %}
 		
 			    {% if escuderias %}
-
+			<h2>Constructores</h2>
 			{% for row in escuderias %}
-				<ul>
-			    <dt><li><b>{{row.nombre}}</b> (Nombre de la nacionalidad: {{row.nacionalidad}})</li></dt>
-			    <dd><b>Victorias: </b>{{row.victorias}} 
-					<b>Poles: </b>{{row.poles}}
-					<b>Campeonatos del mundo de constructores ganados: </b>{{row.campeonatos}}
-					<b>Temporadas disputadas: </b>{{row.temporadas}}
-					<b>Carreras disputadas: </b>{{row.carreras}}
-					<b>Puntos obtenidos durante su historia: </b>{{row.puntos}}
-				<br>
-				<dd> <b>Pilotos que han pilotado para ellos: </b>
-			    {% for pil in row.pilotos.all %}
-			    	{{pil.nombre}} 
-			    {% endfor %}
-			    </dd>
-			   	<dd> <b>Temporadas en las que han participado: </b>
-			    {% for a in row.anyos_competidos.all %}
-			    	{{a.anyo}} 
-			    {% endfor %}
-			    </dd>
-			    </ul>
-			<br><br>
+			<div class="card border-info mb-3">
+  				<div class="card-header">
+    				<b>{{row.nombre}}</b> (Nacionalidad: {{row.nacionalidad}})
+  				</div>
+	  			<div class="card-body">
+				    <p class="card-text"><b>Victorias: </b>{{row.victorias}}</p>
+				    <p class="card-text"><b>Campeonatos del mundo de constructores ganados: </b>{{row.campeonatos}}</p>
+				    <p class="card-text"><b>Poles: </b>{{row.poles}}</p>
+				    <p class="card-text"><b>Temporadas disputadas: </b>{{row.temporadas}}</p>
+				    <p class="card-text"><b>Carreras disputadas: </b>{{row.carreras}}</p>
+				    <p class="card-text"><b>Puntos obtenidos durante su historia: </b>{{row.puntos}}</p>
+				    <p class="card-text"><b>Temporadas en las que han participado: </b> 
+				    	{% for a in row.anyos_competidos.all %}
+			    			{{a.anyo}} 
+			    		{% endfor %}
+				    </p>
+				    <p class="card-text"><b>Pilotos que han pilotado para ellos: </b>
+			    	{% for pil in row.pilotos.all %}
+			    		{{pil.nombre}} 
+			    	{% endfor %}
+				    </p>
+	  			</div>
+			</div>
+
 			{% endfor %}
-
-			</dl>
-
 		{% endif %}
-		
-	</div>
 {% endblock %}

@@ -1,11 +1,15 @@
 {% extends 'base.html' %}
-{% block titulo %}Ingresa al sistema{% endblock %}
+{% block titulo %}{% endblock %}
 {% block encabezado %}
-	<h1>Ingresa</h1>
 {% endblock %}
 {% block contenido %}
-	<form id='formulario' method='post' action=''>{% csrf_token %}
-		<table>{{formulario}}</table>
-		<p><input type='submit' value='Ingresar'/></p>
-	</form>
+  <h1 class="display-4" style="text-align:center"> INGRESAR </h1>
+<br><br>
+	<form id="formulario" method="post" action='' style="text-align:center">{% csrf_token %}
+    		{{formulario}}
+    	<div class="col-12">
+    	<br>
+    		<button type="submit" class="btn btn-primary">Ingresar</button>
+  		</div>
+    </form>
 {% endblock %}

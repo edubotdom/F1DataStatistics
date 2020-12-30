@@ -471,4 +471,7 @@ def cerrar(request):
     return HttpResponseRedirect('/')
 
 def inicio(request):
-    return render(request, 'inicio.html')
+    num_pilotos=Piloto.objects.all().count()
+    num_escuderias=Escuderia.objects.all().count()
+    return render(request,'inicio.html', {'num_pilotos':num_pilotos, 'num_escuderias':num_escuderias})
+

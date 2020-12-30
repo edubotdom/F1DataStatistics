@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 {% block titulo %}Nuevo usuario{% endblock %}
 {% block encabezado %}
-	<h1>Registra un nuevo usuario</h1>
 {% endblock %}
 {% block contenido %}
-	<form id='formulario' method='post' action=''>{% csrf_token %}
+  <h1 class="display-4" style="text-align:center"> REGISTRAR NUEVO USUARIO </h1>
+  
+	<form id='formulario' method='post' action='' style="text-align:center">{% csrf_token %}
 		<table>{{formulario}}</table>
-		<p><input type='submit' value='Registrar'/></p>
+		<div class="col-12">
+    		<button type="submit" class="btn btn-primary">Registrar</button>
+  		</div>
 	</form>
 {% endblock %}

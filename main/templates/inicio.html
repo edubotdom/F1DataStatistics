@@ -2,9 +2,13 @@
 
 {% extends 'base.html' %}
 
-{% block encabezado %}
-<h1> Inicio </h1>
+{% block encabezado %} 
 {% endblock %}
 
   {% block contenido %}
+    {% load static %}
+  
+    <h1 class="display-4" style="text-align:center"> INICIO </h1>
+    <br><br>
+    <h5 class="display-6" style="text-align:center"> Esto es F1 Data Statistics, un sitio dedicado a la muestra de datos presentes e historicos relativos a la categoria reina del automovilismo, la Formula 1. Actualmente tenemos registrados {{num_pilotos}} pilotos, y {{num_escuderias}} constructores </h5>
   {% endblock %}
