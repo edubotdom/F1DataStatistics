@@ -1,11 +1,9 @@
 #encoding:utf-8
-from main.models import Piloto, Escuderia, Nacionalidad, Anyo
-from django.shortcuts import render, redirect
+import shelve, random, lxml, re, os, shutil, urllib.request
+from main.models import Piloto, Escuderia, Nacionalidad, Anyo, Votacion
+from django.shortcuts import render, redirect, get_object_or_404
 from bs4 import BeautifulSoup
-import urllib.request
-import lxml
 from datetime import datetime
-import re, os, shutil
 from whoosh.query import Every
 from whoosh.index import create_in,open_dir
 from whoosh.fields import Schema, TEXT, DATETIME, KEYWORD, NUMERIC
@@ -15,7 +13,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from main.forms import BusquedaPorNacionalidadForm, BusquedaPorAnyoForm,\
-    BusquedaPorNombreForm, BusquedaPorMasDestacadosForm
+    BusquedaPorNombreForm, BusquedaPorMasDestacadosForm, BusquedaDePilotoSimilar
+from numpy.random.mtrand import randint
+from main.recommendations import  transformPrefs, calculateSimilarItems, getRecommendations, getRecommendedItems, topMatches
+
 
 def extraer_pilotos():
     #definimos el esquema de la información
@@ -475,3 +476,121 @@ def inicio(request):
     num_escuderias=Escuderia.objects.all().count()
     return render(request,'inicio.html', {'num_pilotos':num_pilotos, 'num_escuderias':num_escuderias})
 
+@login_required(login_url='/ingresar')
+def loadRS(request):
+    if request.method=='POST':
+        if 'Aceptar' in request.POST:      
+            gen_votaciones_piloto()
+            populateVotaciones()
+            loadDict()
+            return render(request, 'cargar_datos.html')
+        else:
+            return redirect("/")
+
+    return render(request,'confirmacion_loadRS.html')
+
+def pilotoSimilar(request):
+    piloto = None
+    if request.method=='POST':
+        form = BusquedaDePilotoSimilar(request.POST)
+        if form.is_valid():
+            idPiloto = form.cleaned_data['id']
+            piloto = get_object_or_404(Piloto, id=idPiloto)
+            shelf = shelve.open("votacionesPilotosRS.dat")
+            ItemsPrefs = shelf['ItemsPrefs']
+            shelf.close()
+            recommended = topMatches(ItemsPrefs, int(idPiloto),n=3)
+            pilotos = []
+            similar = []
+            for re in recommended:
+                pilotos.append(Piloto.objects.get(pk=re[1]))
+                similar.append(re[0])
+            items= zip(pilotos,similar)
+            print(items)
+            return render(request,'buscar_piloto_similar.html', {'piloto': piloto,'pilotos': items, 'formulario': form})
+    form = BusquedaDePilotoSimilar()
+    return render(request,'buscar_piloto_similar.html', {'formulario': form})
+
+def gen_votaciones_piloto():
+    iteraciones = 5000
+    votos_por_persona = 15
+    path="voting_data"    
+    f = open(path+"\\votaciones_piloto.txt", "w")
+    """
+    for i in range(0,iteraciones):
+        puntuacion_piloto = str(randint(0,5))
+        usuario_random = "user"+ str(randint(100))
+        id_min=Piloto.objects.all().order_by("id")[0].id
+        id_max= Piloto.objects.all().order_by("-id")[0].id
+        piloto_random = Piloto.objects.get(id=randint(id_min,id_max)).id
+        
+        f.write(usuario_random + "-" + str(piloto_random) + "-" + puntuacion_piloto + "\n")
+    
+    f.close()
+    """
+    id_min=Piloto.objects.all().order_by("id")[0].id
+    id_max= Piloto.objects.all().order_by("-id")[0].id
+    
+    id_nac_min=Nacionalidad.objects.all().order_by("id")[0].id
+    id_nac_max= Nacionalidad.objects.all().order_by("-id")[0].id
+    
+    for i in range(0,iteraciones):
+        usuario_random = "user"+ str(i)
+        nacionalidad = Nacionalidad.objects.get(id=randint(id_nac_min,id_nac_max)).id
+        
+        for i2 in range(0, votos_por_persona):
+            piloto_random = Piloto.objects.get(id=randint(id_min,id_max))
+            piloto_random_id = piloto_random.id
+            pesos = [1,1,1,1,1,1]
+            if(piloto_random.nacionalidad.id == nacionalidad):
+                for i in range(1,5):
+                    pesos[i] = pesos[i]*(i+0.5)
+                
+            if(piloto_random.campeonatos > 1):
+                for i in range(1,5):
+                    pesos[i] = pesos[i]*(i+1)
+            
+            if(piloto_random.carreras > 50):
+                for i in range(1,5):
+                    pesos[i] = pesos[i]*(i+0.5)
+
+            if(piloto_random.victorias > 20):
+                for i in range(1,5):
+                    pesos[i] = pesos[i]*(i+0.75)
+
+            puntuacion_piloto = random.choices([0,1,2,3,4,5], pesos, k=1)[0]
+            #puntuacion_piloto = str(randint(0,5))
+            
+            f.write(usuario_random + "-" + str(piloto_random_id) + "-" + str(puntuacion_piloto) + "\n")
+    
+    f.close()
+    
+def populateVotaciones():
+    Votacion.objects.all().delete()
+    path="voting_data"
+    lista=[]
+    fileobj=open(path+"\\votaciones_piloto.txt", "r")
+    for line in fileobj.readlines():
+        rip = line.split('-')
+        lista.append(Votacion(votante=rip[0].strip(), piloto=Piloto.objects.get(id=int(rip[1].strip())), puntuacion=int(rip[2].strip()) ))
+    fileobj.close()
+    Votacion.objects.bulk_create(lista)
+    
+# Funcion que carga en el diccionario Prefs todas las puntuaciones de usuarios a pilotos. Tambien carga el diccionario inverso y la matriz de similitud entre items
+# Serializa los resultados en votacionesPilotosRS.dat
+def loadDict():
+    Prefs={}   # matriz de usuarios y puntuaciones a cada a items
+    shelf = shelve.open("votacionesPilotosRS.dat")
+    votaciones = Votacion.objects.all()
+    for vo in votaciones:
+        votante = str(vo.votante)
+        piloto = int(vo.piloto.id)
+        puntuacion = float(vo.puntuacion)
+        Prefs.setdefault(votante, {})
+        Prefs[votante][piloto] = puntuacion
+    shelf['Prefs']=Prefs
+    shelf['ItemsPrefs']=transformPrefs(Prefs)
+    shelf['SimItems']=calculateSimilarItems(Prefs, n=10)
+    shelf.close()
+        
+    

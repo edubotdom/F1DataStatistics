@@ -1,0 +1,24 @@
+
+
+{% extends 'base.html' %}
+
+{% block encabezado %}
+{% endblock %}
+
+  {% block contenido %}
+    <h1 class="display-4" style="text-align:center"> CONFIRMACION PARA GENERAR Y PROCESAR SISTEMA DE RECOMENDACIONES</h1>
+	<br><br><br> 
+	<h2 class="display-6" style="text-align:center"> PROCESO LENTO </h2>
+	<h3 class="display-6" style="text-align:center"> PULSE ACEPTAR SI DESEA CONTINUAR</h3>
+
+    <br><br>
+    <form id='formulario' method='post' action='' style="text-align:center">{% csrf_token %}
+    	<div class="col-12">
+    		<button type="submit" name="Aceptar" value="Aceptar" class="btn btn-primary">Aceptar</button>
+  		</div>
+  		<br>
+  		<div class="col-12">
+    		<button type="submit" name="Cancelar" value="Cancelar" class="btn btn-primary">Cancelar</button>
+  		</div>
+	</form>
+  {% endblock %}

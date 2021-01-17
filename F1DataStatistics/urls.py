@@ -32,4 +32,6 @@ urlpatterns = [
     path('busqueda_anyo/', views.buscar_por_anyo),
     path('busqueda_nombre/', views.buscar_por_nombre),
     path('top_pilotos_escuderias/', views.listar_mejores),
+    path('cargar_rs/', views.loadRS),
+    path('piloto_similar/', views.pilotoSimilar)
 ]

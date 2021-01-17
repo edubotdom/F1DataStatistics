@@ -1,6 +1,6 @@
 #encoding:utf-8
 from django import forms
-from main.models import Nacionalidad, Anyo
+from main.models import Nacionalidad, Anyo, Piloto
    
 class BusquedaPorNacionalidadForm(forms.Form):
     lista=[(g.nombre,g.nombre) for g in Nacionalidad.objects.all()]
@@ -15,3 +15,7 @@ class BusquedaPorNombreForm(forms.Form):
     
 class BusquedaPorMasDestacadosForm(forms.Form):
     opcion = forms.ChoiceField(label="Seleccione la categoría para realizar la selección ", choices=[("Campeonatos", "Campeonatos"), ("Victorias", "Victorias"), ("Poles","Poles"), ("Carreras","Carreras")])
+
+class BusquedaDePilotoSimilar(forms.Form):
+    lista=[(g.id,g.nombre) for g in Piloto.objects.all()]
+    id = forms.ChoiceField(label="Seleccione el piloto que quiere usar como referencia", choices=lista)    

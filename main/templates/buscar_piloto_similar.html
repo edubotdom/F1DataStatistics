@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block encabezado %}
+{% endblock %}
+
+{% block contenido %}
+<h1 class="display-4" style="text-align:center"> RECOMENDAR PILOTOS SIMILARES A OTRO</h1>
+
+    	<form id="formulario" method="post" action='' style="text-align:center">{% csrf_token %}
+    		{{formulario}}
+    	<div class="col-12">
+    		<button type="submit" class="btn btn-primary">Realizar busqueda</button>
+  		</div>
+    	</form>
+	    
+	    <hr>
+
+	    {% if pilotos %}
+			{% for row, s in pilotos %}
+			<div class="card border-warning mb-3">
+  				<div class="card-header">
+    				<b>{{row.nombre}}</b> (Nacionalidad: {{row.nacionalidad}}) (Similaridad: {{s}})
+  				</div>
+	  			<div class="card-body">
+				    <p class="card-text"><b>Fecha de nacimiento: </b>{{row.fechaNacimiento}}</p>
+				    <p class="card-text"><b>Victorias: </b>{{row.victorias}}</p>
+				    <p class="card-text"><b>Podios: </b>{{row.podios}}</p>
+				    <p class="card-text"><b>Campeonatos del mundo de pilotos ganados: </b>{{row.campeonatos}}</p>
+				    <p class="card-text"><b>Poles: </b>{{row.poles}}</p>
+				    <p class="card-text"><b>Temporadas disputadas: </b>{{row.temporadas}}</p>
+				    <p class="card-text"><b>Carreras disputadas: </b>{{row.carreras}}</p>
+				    <p class="card-text"><b>Puntos obtenidos durante su carrera deportiva: </b>{{row.puntos}}</p>
+				    <p class="card-text"><b>Retiros durante su carrera deportiva: </b>{{row.retiros}}</p>
+				    <p class="card-text"><b>Anyos competidos en el mundial: </b> 
+				    	{% for a in row.anyos_competidos.all %}
+			    			{{a.anyo}} 
+			    		{% endfor %}
+				    </p>
+	  			</div>
+			</div>			
+			{% endfor %}
+		{% endif %}
+		
+{% endblock %}
